@@ -13,11 +13,24 @@ import java.util.Date;
  */
 public class Postulacion {
     
+    private Integer id;
     private Date fechaPostulacion;
     private Boolean estado;
     private Estudiante estudianteQueRealiza;
     private Beca aBeca;
 
+    public Postulacion(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    
     public Date getFechaPostulacion() {
         return fechaPostulacion;
     }

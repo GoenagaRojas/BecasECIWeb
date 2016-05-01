@@ -5,19 +5,30 @@
  */
 package eci.escuelaing.becaseciweb.entities;
 
-import java.util.Date;
-
 /**
  *
  * @author andres
  */
 public class Opinion {
     
+    private Integer id;
     private String titulo;
     private String opinion;
     private Estudiante quienOpina;
     private Beca sobreBeca;
 
+    public Opinion(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    
     public String getTitulo() {
         return titulo;
     }

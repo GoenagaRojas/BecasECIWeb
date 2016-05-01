@@ -14,10 +14,23 @@ import java.util.Date;
  */
 public class OtorgacionBeca {
     
+    private Integer id;
     private Date fecha;
     private Boolean estado;
     private Beca aBeca;
-    private ArrayList<Estudiante> quienEsBecado;
+    private ArrayList<Estudiante> quienEsBecado=new ArrayList<>();
+
+    public OtorgacionBeca(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Date getFecha() {
         return fecha;

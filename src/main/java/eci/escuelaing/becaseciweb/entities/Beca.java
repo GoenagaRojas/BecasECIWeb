@@ -13,15 +13,39 @@ import java.util.ArrayList;
  */
 public class Beca {
     
-    private ArrayList<Postulacion> postulaciones;
+    private Integer id;
+    private String nombre;
+    private ArrayList<Postulacion> postulaciones=new ArrayList<>();
     private Integer duracionSemestres;
-    private ArrayList<ProgramaAcademico> otorgadaPara;
-    private ArrayList<String> beneficios;
-    private ArrayList<String> opciones;
-    private ArrayList<String> condiciones;
-    private ArrayList<Opinion> opiniones;
-    private ArrayList<OtorgacionBeca> otorgadaA;
+    private ArrayList<ProgramaAcademico> otorgadaPara= new ArrayList<>();
+    private ArrayList<String> beneficios= new ArrayList<>();
+    private ArrayList<String> opciones= new ArrayList<>();
+    private ArrayList<String> condiciones =new ArrayList<>();
+    private ArrayList<Opinion> opiniones =new ArrayList<>();
+    private ArrayList<OtorgacionBeca> otorgadaA=new ArrayList<>();
 
+    public Beca(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+    
+    
+    
     public ArrayList<Postulacion> getPostulaciones() {
         return postulaciones;
     }

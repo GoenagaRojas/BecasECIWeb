@@ -24,10 +24,18 @@ public class Estudiante {
     private Integer semestre;
     private Integer estrato;
     private Proyecto proyectoParticipa;
-    private ArrayList<Opinion> opiniones;
-    private ArrayList<Postulacion> postulaciones;
+    private ArrayList<Opinion> opiniones=new ArrayList<>();
+    private ArrayList<Postulacion> postulaciones=new ArrayList<>();
     private OtorgacionBeca becadoA;
 
+    public Estudiante(Integer id, Integer codigo, String nombre, String apellido, Integer estrato) {
+        this.id = id;
+        this.codigo = codigo;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.estrato = estrato;
+    }
+    
     public Integer getId() {
         return id;
     }

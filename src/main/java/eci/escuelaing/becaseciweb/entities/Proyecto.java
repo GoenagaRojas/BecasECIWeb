@@ -19,11 +19,16 @@ public class Proyecto {
     private Date fechaInicio;
     private Date fechaFin;
     private String tema;
-    private ArrayList<String> areaDeConocimiento;
+    private ArrayList<String> areaDeConocimiento=new ArrayList<>();
     private String objetivo;
-    private ArrayList<Organizacion> orgsPatrocinan;
-    private ArrayList<Estudiante> participan;
+    private ArrayList<Organizacion> orgsPatrocinan=new ArrayList<>();
+    private ArrayList<Estudiante> participan=new ArrayList<>();
 
+    public Proyecto(Integer codigo, String nombre) {
+        this.codigo = codigo;
+        this.nombre = nombre;
+    }
+    
     public Integer getCodigo() {
         return codigo;
     }

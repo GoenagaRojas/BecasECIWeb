@@ -12,15 +12,33 @@ import java.util.ArrayList;
  * @author andres
  */
 public class Organizacion {
+    
+    private Integer id;
     private String nombre;
     private String tOrganizacion;
     private String urlLogo;
     private String slogan;
-    private ArrayList<Integer> telefono;
-    private ArrayList<String> urlPagOficial;
-    private ArrayList<String> correo;
+    private ArrayList<Integer> telefono=new ArrayList<>();
+    private ArrayList<String> urlPagOficial=new ArrayList<>();
+    private ArrayList<String> correo=new ArrayList<>();
     private String dirSedePpal;
-    private ArrayList<Proyecto> proyectoPatrocina;
+    private ArrayList<Proyecto> proyectoPatrocina=new ArrayList<>();
+
+    public Organizacion(Integer id, String nombre, String tOrganizacion, String urlLogo, String slogan) {
+        this.id = id;
+        this.nombre = nombre;
+        this.tOrganizacion = tOrganizacion;
+        this.urlLogo = urlLogo;
+        this.slogan = slogan;
+    }
+    
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getNombre() {
         return nombre;
