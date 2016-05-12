@@ -29,6 +29,7 @@ public class ServicesFacade {
         //Datos ingresados automaticamente
         for (int i = 0; i < 20; i++) {
             BECAS.add(new Beca(i));
+            BECAS.get(i).setNombre("Beca "+i);
             ESTUDIANTES.add(new Estudiante(i, 210+i, "Nombre"+i, "Apellido"+i, 4));
             OPINIONES.add(new Opinion(i));
             PROYECTOS.add(new Proyecto(i, "Proyecto"+i));
@@ -107,5 +108,17 @@ public class ServicesFacade {
     
     public List<Organizacion> getOrganizaciones(){
         return ORGANIZACIONES;
+    }
+    
+    public void addProyecto(Proyecto proyecto){
+        PROYECTOS.add(proyecto);
+    }
+    
+    public void addBeca(Beca beca){
+        BECAS.add(beca);
+    }
+    
+    public void addOpinion(Opinion opinion){
+        OPINIONES.add(opinion);
     }
 }

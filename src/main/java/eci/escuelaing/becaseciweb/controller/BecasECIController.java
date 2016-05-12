@@ -13,12 +13,9 @@ import eci.escuelaing.becaseciweb.services.ServicesFacade;
 import java.util.HashSet;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 /**
  *
@@ -69,5 +66,23 @@ public class BecasECIController {
     @RequestMapping(value = "/proyecto", method = RequestMethod.GET)
     public @ResponseBody Set<Proyecto> getProyectosOrganizacion(@RequestParam(value="idOrg", required=true) String id){
         return new HashSet<>(services.getProyectosOrganizacion(id));
+    }
+    
+    @RequestMapping(value = "/proyecto", method = RequestMethod.POST)
+    public ResponseEntity<?> postProyecto(@RequestBody Proyecto p){
+        services.addProyecto(p);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+    
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<?> postBeca(@RequestBody Beca b){
+        services.addBeca(b);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+    
+    @RequestMapping(value = "/opinion",method = RequestMethod.POST)
+    public ResponseEntity<?> postOpinion(@RequestBody Opinion o){
+        services.addOpinion(o);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

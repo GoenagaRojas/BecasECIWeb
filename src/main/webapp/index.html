@@ -8,7 +8,58 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <body>
-        <h1>Hello World!</h1>
+   <body ng-app="modone">
+        <div ng-controller="AppController">
+            <div ng-show="mostrarSeleccionUsuario">
+                <div id="content">
+                    <button ng-click="irAServiciosEstudiante()">
+                        Estudiante
+                    </button>
+                    <button ng-click="irAServiciosOrganizacion()">
+                        Organizacion
+                    </button>
+                    <button ng-click="irAServiciosCoordinador()">
+                        Coordinador Apoyo Financiero
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Pagina 1 -->
+            <div ng-show="mostrarServiciosEstudiante">
+                <div id="content">
+                    <button ng-click="irABecasDisponiblesEstudiante()">
+                        Consultar Becas Disponibles
+                    </button>
+                    <button ng-click="irAProyectosEstudiantes()">
+                        Consultar Proyectos
+                    </button>
+                    <button ng-click="irAOpinionesEstudiante()">
+                        Consultar Opiniones
+                    </button>
+                </div>
+                <div id="navigation">
+                    <button ng-click="irASeleccionUsuario()">
+                        Volver
+                    </button>
+                </div>
+            </div>
+            <div ng-show="mostrarBecasDisponiblesEstudiante">
+                <table title="Becas Disponibles" border="4">
+                    Becas Disponibles
+                     <tr>
+                        <th>Identificador de Beca</th>.
+                        <th>Beca</th>
+                     </tr>
+                     <select ng-model="select">
+                         <tr ng-repeat = "beca in becas" >
+                            <td>{{ beca.id}}</td>
+                            <td>{{ beca.nombre }}</td>
+                         </tr>
+                     </select>
+                     {{select}}
+                  </table>
+            </div>
+            
+        </div>
     </body>
 </html>
