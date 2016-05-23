@@ -146,9 +146,13 @@
                         Verificar Existencia ID
                     </button>
                     <br>
-                    <button ng-show="idValido" ng-click="guardarPostulacion()">
-                        Confirmar Postulación
-                    </button>
+                    <div ng-show="idValido">
+                        <button ng-click="guardarPostulacion()">
+                            Confirmar Postulación
+                        </button>
+                        <br>
+                        <label>Estado de Postulación {{estadoAplicacion}}</label>
+                    </div>
                 </form>
                 <br>
                 <div id="navigation">
@@ -329,12 +333,12 @@
                         <th>Identificador de Proyecto</th>
                         <th>Nombre de Proyecto</th>
                     </tr>
-                    <tr ng-repeat = "proyecto in proyectosDeOrganizacion | orderBy: 'codigo'" ng-click="setProyectoSeleccionado(proyecto.codigo)" ng-class="{selected: proyecto.codigo === proyectoSeleccionado}">
+                    <tr ng-repeat = "proyecto in proyectosDeOrganizacion | orderBy: 'codigo'" ng-click="setProyectoSeleccionadoOrg(proyecto.codigo)" ng-class="{selected: proyecto.codigo === proyectoSeleccionadoOrg}">
                         <td>{{ proyecto.codigo }}</td>
                         <td>{{ proyecto.nombre }}</td>
                     </tr>
                 </table>
-                <button ng-click="irAProyectoOrganizacion()" ng-show="proyectoSeleccionado!==Null">
+                <button ng-click="irAProyectoOrganizacion()" ng-show="proyectoSeleccionadoOrg!==Null">
                     <label>
                         Ver detalles de Proyecto Seleccionado
                     </label>
@@ -376,7 +380,7 @@
                 </label>
                 <br>
                 <div id="navigation">
-                    <button ng-click="irAProyectosOrganizacion()()">
+                    <button ng-click="irAProyectosOrganizacion()">
                         Volver
                     </button>
                 </div>
@@ -386,11 +390,6 @@
                 <label>
                     Detalles Proyecto:
                 </label>
-                <br>
-                <label>
-                    Codigo: 
-                </label>
-                <input type="number" ng-model="idProyecto"/>
                 <br>
                 <label>
                     Nombre: 
@@ -421,12 +420,12 @@
                         Validar Datos
                 </button>
                 <br>
-                <button ng-show="datosValidos">
+                <button ng-click="guardarProyecto()" ng-show="datosValidos">
                     Registrar Proyecto
                 </button>
                 <br>
                 <div id="navigation">
-                    <button ng-click="irAProyectoOrganizacion()">
+                    <button ng-click="irAServiciosOrganizacion()">
                         Volver
                     </button>
                 </div>

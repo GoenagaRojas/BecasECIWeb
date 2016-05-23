@@ -204,18 +204,21 @@ public class ServicesFacade {
         return ans;
     }
     
-    public void estudianteAplica(Postulacion p){
+    public void estudianteAplica(String idEst, String idBeca){
         Boolean found=false;
-        if(p.getId()==null){
-            p.setId(POSTULACIONES.size());
-            POSTULACIONES.add(p);
-            found=true;
-        }
-        for (int i = 0; i < POSTULACIONES.size() && !found; i++) {
-            if(Objects.equals(POSTULACIONES.get(i).getId(), p.getId())){
-                POSTULACIONES.add(i, p);
+        for (Postulacion p : POSTULACIONES) {
+            if((p.getPostulado().getId()==Integer.parseInt(idEst))&&(p.getaBeca().getId()==Integer.parseInt(idBeca))){
                 found=true;
+                break;
             }
+        }
+        if(!found){
+            Postulacion nueva=new Postulacion(POSTULACIONES.size());
+            nueva.setEstado(false);
+            nueva.setFechaPostulacion(new Date());
+            nueva.setPostulado(getEstudiante(idEst));
+            nueva.setaBeca(getBeca(idBeca));
+            POSTULACIONES.add(nueva);
         }
     }
     

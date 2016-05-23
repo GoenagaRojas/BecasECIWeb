@@ -5,6 +5,7 @@
  */
 package eci.escuelaing.becaseciweb.controller;
 
+import com.google.gson.Gson;
 import eci.escuelaing.becaseciweb.entities.Beca;
 import eci.escuelaing.becaseciweb.entities.Estudiante;
 import eci.escuelaing.becaseciweb.entities.Opinion;
@@ -75,9 +76,11 @@ public class BecasECIController {
         return new HashSet<>(services.getOpinionesBeca(id));
     }
     
-    @RequestMapping(value = "/proyecto", method = RequestMethod.POST)
-    public ResponseEntity<?> postProyecto(@RequestBody Proyecto p){
-        services.addProyecto(p);
+    @RequestMapping(value = "/proyecto",method = RequestMethod.POST)
+    public ResponseEntity<?> postProyecto(@RequestParam(value = "newP", required = true) String newP){
+        Gson gson = new Gson();
+        Proyecto nuevo= gson.fromJson(newP, Proyecto.class);
+        services.addProyecto(nuevo);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
     
@@ -121,8 +124,8 @@ public class BecasECIController {
     }
     
     @RequestMapping(value = "/postulacion",method = RequestMethod.POST)
-    public ResponseEntity<?> postPostulacion(@RequestBody Postulacion p){
-        services.estudianteAplica(p);
+    public ResponseEntity<?> postPostulacion(@RequestParam(value = "idEst", required = true) String idEst, @RequestParam(value = "idBeca", required = true) String idBeca){
+        services.estudianteAplica(idEst, idBeca);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
     

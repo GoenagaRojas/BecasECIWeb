@@ -194,6 +194,7 @@ app.controller('AppController', ['$scope','$http' , function($scope,$http) {
         $scope.mostrarProyectoEstudiantes= false;
         $scope.mostrarRegistrarProyectoOrganizacion= false;
         $scope.aplicar=false;
+        $scope.estadoAplicacion="Incompleto";
         $http.get('rest/becasECI/'+$scope.becaSeleccionada).
         success(function (data, status, headers, config) {
             $scope.becaDeInteres=data;
@@ -219,43 +220,12 @@ app.controller('AppController', ['$scope','$http' , function($scope,$http) {
             }
         };
         $scope.guardarPostulacion= function (){
-            $http.get('rest/becasECI/estudiante?idEst='+$scope.est).
-            success(function (data, status, headers, config) {
-                $scope.postulado=data;
-            }).
-            error(function (data, status, headers, config) {
-            });
-    
-            $http.get('rest/becasECI/'+$scope.becaSeleccionada).
-            success(function (data, status, headers, config) {
-                $scope.becaDeInteres=data;
-            }).
-            error(function (data, status, headers, config) {
-            });
-    
-            $scope.postulacion={
-                id : null,
-                fechaPostulacion : null,
-                estado : false,
-                aBeca : $scope.becaDeInteres,
-                postulado : $scope.postulado
-            };
-            console.info($scope.postulacion);
-            $http.post('http://localhost:8084/BecasECIWeb/rest/becasECI/postulacion', $scope.postulacion)
+            $http.post('http://localhost:8084/BecasECIWeb/rest/becasECI/postulacion?idEst='+$scope.est+'&idBeca='+$scope.becaSeleccionada)
             .success(function (data, status, headers, config) {
+                $scope.estadoAplicacion="Completo";
             })
             .error(function (data, status, header, config) {
-                console.info(data);
-            });
-            /**
-            $http({
-                method : 'POST',
-                url: 'http://localhost:8084/BecasECIWeb/rest/becasECI/postulacion',
-                data : $scope.postulacion
-            }).success(function (data){
-               console.log(data);
-            });
-            */            
+            });           
         };
     };
     $scope.irABecaCoordinador= function(){
@@ -376,8 +346,8 @@ app.controller('AppController', ['$scope','$http' , function($scope,$http) {
         }).
         error(function (data, status, headers, config) {
         });
-        $scope.setProyectoSeleccionado = function(idProyecto){
-            $scope.proyectoSeleccionado=idProyecto;
+        $scope.setProyectoSeleccionadoOrg = function(idProyecto){
+            $scope.proyectoSeleccionadoOrg=idProyecto;
         };
     };
     $scope.irAProyectosOrganizacionEstudiantes= function(){
@@ -426,9 +396,10 @@ app.controller('AppController', ['$scope','$http' , function($scope,$http) {
         $scope.mostrarProyectoOrganizacion= true;
         $scope.mostrarProyectoEstudiantes= false;
         $scope.mostrarRegistrarProyectoOrganizacion= false;
-        $http.get('rest/becasECI/proyecto/'+$scope.proyectoSeleccionado).
+        $http.get('rest/becasECI/proyecto/'+$scope.proyectoSeleccionadoOrg).
         success(function (data, status, headers, config) {
             $scope.proyectoDeInteres=data;
+            console.info($scope.proyectoDeInteres);
         }).
         error(function (data, status, headers, config) {
         });
@@ -484,21 +455,32 @@ app.controller('AppController', ['$scope','$http' , function($scope,$http) {
         $scope.objetivoProyecto = null;
         $scope.datosValidos=false;
         $scope.datosProyectoValidos = function (){
-            if($scope.idProyecto!==null){
-                $scope.datosValidos=true;
-                $http.get('rest/becasECI/proyecto/'+$scope.idProyecto).
-                success(function (data, status, headers, config) {
-                    $scope.proyectoDeInteres=data;
-                }).
-                error(function (data, status, headers, config) {
-                });
-                console.info($scope.datosValidos && $scope.proyectoDeInteres === null);
-                $scope.datosValidos=$scope.datosValidos && $scope.proyectoDeInteres === null;
-                $scope.datosValidos=$scope.datosValidos && $scope.nombreProyecto !== null;
-                $scope.datosValidos=$scope.datosValidos && $scope.fechaInicioProyecto !== null && $scope.fechaFinProyecto !== null;
-                $scope.datosValidos=$scope.datosValidos && $scope.temaProyecto !== null;
-                $scope.datosValidos=$scope.datosValidos && $scope.objetivoProyecto !== null;
+            $scope.datosValidos=true;
+            $scope.datosValidos=$scope.datosValidos && $scope.nombreProyecto !== null;
+            $scope.datosValidos=$scope.datosValidos && $scope.fechaInicioProyecto !== null && $scope.fechaFinProyecto !== null;
+            $scope.datosValidos=$scope.datosValidos && $scope.temaProyecto !== null;
+            $scope.datosValidos=$scope.datosValidos && $scope.objetivoProyecto !== null;
+            if($scope.datosValidos){
+                $scope.nuevoProyecto={
+                    codigo: null,
+                    nombre: $scope.nombreProyecto,
+                    fechaInicio: $scope.fechaInicioProyecto,
+                    fechaFin: $scope.fechaFinProyecto,
+                    tema: $scope.temaProyecto,
+                    areaDeConocimiento: [],
+                    objetivo: $scope.objetivoProyecto,
+                    participan: []
+                };
+                $scope.nuevoProyecto=JSON.stringify($scope.nuevoProyecto);
             }
+        };
+        $scope.guardarProyecto = function(){
+            console.info($scope.nuevoProyecto);
+            $http.post('rest/becasECI/proyecto?newP='+$scope.nuevoProyecto)
+            .success(function (data, status, headers, config) {
+            })
+            .error(function (data, status, header, config) {
+            });
         };
     };
 }]);
