@@ -14,8 +14,24 @@ public class Opinion {
     private Integer id;
     private String titulo;
     private String opinion;
-    private Estudiante quienOpina;
-    private Beca sobreBeca;
+    private Estudiante autor;
+    private Beca beca;
+
+    public Estudiante getAutor() {
+        return autor;
+    }
+
+    public void setAutor(Estudiante autor) {
+        this.autor = autor;
+    }
+
+    public Beca getBeca() {
+        return beca;
+    }
+
+    public void setBeca(Beca beca) {
+        this.beca = beca;
+    }
 
     public Opinion(Integer id) {
         this.id = id;
@@ -43,22 +59,6 @@ public class Opinion {
 
     public void setOpinion(String opinion) {
         this.opinion = opinion;
-    }
-
-    public Estudiante getQuienOpina() {
-        return quienOpina;
-    }
-
-    public void setQuienOpina(Estudiante quienOpina) {
-        this.quienOpina = quienOpina;
-    }
-
-    public Beca getSobreBeca() {
-        return sobreBeca;
-    }
-
-    public void setSobreBeca(Beca sobreBeca) {
-        this.sobreBeca = sobreBeca;
     }
     
     

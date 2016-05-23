@@ -23,9 +23,6 @@ public class Estudiante {
     private Float promedio;
     private Integer semestre;
     private Integer estrato;
-    private Proyecto proyectoParticipa;
-    private ArrayList<Opinion> opiniones=new ArrayList<>();
-    private ArrayList<Postulacion> postulaciones=new ArrayList<>();
     private OtorgacionBeca becadoA;
 
     public Estudiante(Integer id, Integer codigo, String nombre, String apellido, Integer estrato) {
@@ -122,30 +119,6 @@ public class Estudiante {
 
     public void setEstrato(Integer estrato) {
         this.estrato = estrato;
-    }
-
-    public Proyecto getProyectoParticipa() {
-        return proyectoParticipa;
-    }
-
-    public void setProyectoParticipa(Proyecto proyectoParticipa) {
-        this.proyectoParticipa = proyectoParticipa;
-    }
-
-    public ArrayList<Opinion> getOpiniones() {
-        return opiniones;
-    }
-
-    public void setOpiniones(ArrayList<Opinion> opiniones) {
-        this.opiniones = opiniones;
-    }
-
-    public ArrayList<Postulacion> getPostulaciones() {
-        return postulaciones;
-    }
-
-    public void setPostulaciones(ArrayList<Postulacion> postulaciones) {
-        this.postulaciones = postulaciones;
     }
 
     public OtorgacionBeca getBecadoA() {

@@ -6,12 +6,13 @@
 package eci.escuelaing.becaseciweb.controller;
 
 import eci.escuelaing.becaseciweb.entities.Beca;
+import eci.escuelaing.becaseciweb.entities.Estudiante;
 import eci.escuelaing.becaseciweb.entities.Opinion;
 import eci.escuelaing.becaseciweb.entities.Organizacion;
+import eci.escuelaing.becaseciweb.entities.Postulacion;
 import eci.escuelaing.becaseciweb.entities.Proyecto;
 import eci.escuelaing.becaseciweb.services.ServicesFacade;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +54,7 @@ public class BecasECIController {
         return new HashSet<>(services.getOpiniones());
     }
     
+    
     @RequestMapping(value = "/{idbeca}", method = RequestMethod.GET)
     public Beca getABeca(@PathVariable("idbeca") String idbeca){
         return services.getBeca(idbeca);
@@ -66,6 +68,11 @@ public class BecasECIController {
     @RequestMapping(value = "/proyecto", method = RequestMethod.GET)
     public @ResponseBody Set<Proyecto> getProyectosOrganizacion(@RequestParam(value="idOrg", required=true) String id){
         return new HashSet<>(services.getProyectosOrganizacion(id));
+    }
+    
+    @RequestMapping(value = "/opinion", method = RequestMethod.GET)
+    public @ResponseBody Set<Opinion> getOpinionesBeca(@RequestParam(value="idBeca", required=true) String id){
+        return new HashSet<>(services.getOpinionesBeca(id));
     }
     
     @RequestMapping(value = "/proyecto", method = RequestMethod.POST)
@@ -84,5 +91,43 @@ public class BecasECIController {
     public ResponseEntity<?> postOpinion(@RequestBody Opinion o){
         services.addOpinion(o);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+    
+    @RequestMapping(value = "estudiante/{id}", method = RequestMethod.GET)
+    public Boolean idEstValido(@PathVariable("id") String id){
+        return services.idEstudianteValido(id);
+    }
+    
+    @RequestMapping(value = "organizacion/{id}", method = RequestMethod.GET)
+    public Boolean idOrgValido(@PathVariable("id") String id){
+        return services.idOrganizacionValido(id);
+    }
+    
+    
+    @RequestMapping(value = "estudiante/proyecto", method = RequestMethod.GET)
+    public @ResponseBody Set<Proyecto> getProyectosEstudiante(@RequestParam(value="idEst", required=true) String id){
+        return new HashSet<>(services.proyectosEstudiante(id));
+    }
+    
+    @RequestMapping(value = "/postulaciones", method = RequestMethod.GET)
+    public @ResponseBody Set<Postulacion> getPostulacionesEstudiante(@RequestParam(value="idEst", required=true) String id){
+        List<Postulacion> ans=new ArrayList<>();
+        if(Integer.parseInt(id)==-1){
+            ans=services.getPostulaciones();
+        }else{
+            ans=services.postulacionesEstudiante(id);
+        }
+        return new HashSet<>(ans);
+    }
+    
+    @RequestMapping(value = "/postulacion",method = RequestMethod.POST)
+    public ResponseEntity<?> postPostulacion(@RequestBody Postulacion p){
+        services.estudianteAplica(p);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+    
+    @RequestMapping(value = "/estudiante", method = RequestMethod.GET)
+    public @ResponseBody Estudiante getEstudiante(@RequestParam(value="idEst", required=true) String id){
+        return services.getEstudiante(id);
     }
 }

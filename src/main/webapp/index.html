@@ -4,20 +4,26 @@
         <script src="js/libs/angular.min.js"></script>
         <script src="appmodule.js"></script>
         <link rel="stylesheet" href="css/bootstrap.css">
-        <title>Start Page</title>
+        <title>BecasECIWeb</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
    <body ng-app="modone">
         <div ng-controller="AppController">
-            <div ng-show="mostrarSeleccionUsuario">
+            <div align="center">
+                <img src="images/BecasECIWebLogo.PNG" width="387" height="198" alt="BecasECIWebLogo"/>
+            </div>
+            <div ng-show="mostrarSeleccionUsuario" align="center">
+                <label>Seleccione su rol para acceder a los servicios:</label>
                 <div id="content">
                     <button ng-click="irAServiciosEstudiante()">
                         Estudiante
                     </button>
+                    <br>
                     <button ng-click="irAServiciosOrganizacion()">
                         Organizacion
                     </button>
+                    <br>
                     <button ng-click="irAServiciosCoordinador()">
                         Coordinador Apoyo Financiero
                     </button>
@@ -25,13 +31,13 @@
             </div>
             
             <!-- Pagina 1 -->
-            <div ng-show="mostrarServiciosEstudiante">
+            <div ng-show="mostrarServiciosEstudiante" align="center">
                 <div id="content">
                     <button ng-click="irABecasDisponiblesEstudiante()">
                         Consultar Becas Disponibles
                     </button>
-                    <button ng-click="irAProyectosEstudiantes()">
-                        Consultar Proyectos
+                    <button ng-click="irAProyectosOrganizacionEstudiantes()">
+                        Consultar Organizaciones
                     </button>
                     <button ng-click="irAOpinionesEstudiante()">
                         Consultar Opiniones
@@ -43,23 +49,388 @@
                     </button>
                 </div>
             </div>
-            <div ng-show="mostrarBecasDisponiblesEstudiante">
+            
+            
+            
+            <div ng-show="mostrarBecasDisponiblesEstudiante" align="center">
                 <table title="Becas Disponibles" border="4">
-                    Becas Disponibles
-                     <tr>
-                        <th>Identificador de Beca</th>.
+                    <label>
+                        Becas Disponibles (Seleccione para más Detalles)
+                    </label>
+                    <tr>
+                        <th>Identificador de Beca</th>
                         <th>Beca</th>
-                     </tr>
-                     <select ng-model="select">
-                         <tr ng-repeat = "beca in becas" >
-                            <td>{{ beca.id}}</td>
-                            <td>{{ beca.nombre }}</td>
-                         </tr>
-                     </select>
-                     {{select}}
-                  </table>
+                    </tr>
+                    <tr ng-repeat = "beca in becas | orderBy: 'id'" ng-click="setBecaSeleccionada(beca.id)" ng-class="{selected: beca.id === becaSeleccionada}">
+                        <td>{{ beca.id}}</td>
+                        <td>{{ beca.nombre }}</td>
+                    </tr>
+                </table>
+                <button ng-show="becaSeleccionada!==Null" ng-click="irABecaEstudiante()">
+                    <label>
+                        Ir a Beca Seleccionada
+                    </label>
+                </button>
+                <div id="navigation">
+                    <button ng-click="irAServiciosEstudiante()">
+                        Volver
+                    </button>
+                </div>
             </div>
             
+            <div ng-show="mostrarBecaEstudiante" align="center">
+                <label>
+                    Detalles de Becas:
+                </label>
+                <br>
+                <label>
+                    Identificador: {{becaDeInteres.id}}
+                </label>
+                <br>
+                <label>
+                    Nombre: {{becaDeInteres.nombre}}
+                </label>
+                <br>
+                <label>
+                    Duración Semestres: {{becaDeInteres.duracionSemestres}}
+                </label>
+                <br>
+                <table border="4">
+                    <tr>
+                        <th>Beneficios</th>
+                    </tr>
+                    <tr ng-repeat = "beneficio in becaDeInteres.beneficios">
+                        <td>{{ beneficio }}</td>
+                    </tr>
+                </table>
+                <br>
+                <table border="4">
+                    <tr>
+                        <th>Opciones</th>
+                    </tr>
+                    <tr ng-repeat = "opcion in becaDeInteres.opciones">
+                        <td>{{ opcion }}</td>
+                    </tr>
+                </table>
+                <br>
+                <table border="4">
+                    <tr>
+                        <th>Condiciones</th>
+                    </tr>
+                    <tr ng-repeat = "condicion in becaDeInteres.condiciones">
+                        <td>{{ condicion }}</td>
+                    </tr>
+                </table>
+                <br>
+                <table border="4">
+                    <label>
+                        Opiniones
+                    </label>
+                    <tr>
+                        <th>Titulo</th>
+                        <th>Opinion</th>
+                        <th>Autor</th>
+                    </tr>
+                    <tr ng-repeat = "opinion in opinionesDeBeca">
+                        <td>{{ opinion.titulo }}</td>
+                        <td>{{ opinion.opinion }}</td>
+                        <td>{{ opinion.autor.nombre }} {{ opinion.autor.apellido }}</td>
+                    </tr>
+                </table>
+                <br>
+                <form ng-show="aplicar">
+                    <label>Indique su ID como Estudiante: </label>
+                    <input type="number" name="aplicar" ng-model="est" ng-change="idValido = false"/>
+                    <br>
+                    <button ng-show="est !== null && !idValido" ng-click="validarId()">
+                        Verificar Existencia ID
+                    </button>
+                    <br>
+                    <button ng-show="idValido" ng-click="guardarPostulacion()">
+                        Confirmar Postulación
+                    </button>
+                </form>
+                <br>
+                <div id="navigation">
+                    <button ng-hide="aplicar" ng-click="aplicar = true">
+                        Aplicar a Beca
+                    </button>
+                    <br>
+                    <button ng-click="irABecasDisponiblesEstudiante()">
+                        Volver
+                    </button>
+                </div>
+            </div>
+            
+            <div ng-show="mostrarProyectosOrganizacionEstudiantes" align="center">
+                <table border="4">
+                    <label>
+                        Organizaciones (Seleccione para más Detalles)
+                    </label>
+                    <tr>
+                        <th>Identificador de Organización</th>
+                        <th>Nombre Organización</th>
+                        <th>Tipo de Organización</th>
+                        <th>Página Principal</th>
+                        <th>Slogan de la Organización</th>
+                        <th>Dirección de Sede Principal</th>
+                    </tr>
+                    <tr ng-repeat = "organizacion in organizaciones | orderBy: 'id'" ng-click="setOrganizacionSeleccionada(organizacion.id)" ng-class="{selected: organizacion.id === organizacionSeleccionada}">
+                        <td>{{ organizacion.id }}</td>
+                        <td>{{ organizacion.nombre }}</td>
+                        <td>{{ organizacion.tOrganizacion }}</td>
+                        <td>{{ organizacion.urlLogo }}</td>
+                        <td>{{ organizacion.slogan }}</td>
+                        <td>{{ organizacion.dirSedePpal }}</td>
+                    </tr>
+                </table>
+                <button ng-show="organizacionSeleccionada!==Null" ng-click="irAProyectosEstudiantes()">
+                    <label>
+                        Ver Proyectos de Organización Seleccionada
+                    </label>
+                </button>
+                <div id="navigation">
+                    <button ng-click="irAServiciosEstudiante()">
+                        Volver
+                    </button>
+                </div>
+            </div>
+            
+            <div ng-show="mostrarProyectosEstudiantes" align="center">
+                <table border="4">
+                    <label>
+                        Proyectos (Seleccione para más Detalles)
+                    </label>
+                    <tr>
+                        <th>Identificador de Proyecto</th>
+                        <th>Nombre de Proyecto</th>
+                    </tr>
+                    <tr ng-repeat = "proyecto in proyectosDeOrganizacion | orderBy: 'codigo'" ng-click="setProyectoSeleccionado(proyecto.codigo)" ng-class="{selected: proyecto.codigo === proyectoSeleccionado}">
+                        <td>{{ proyecto.codigo }}</td>
+                        <td>{{ proyecto.nombre }}</td>
+                    </tr>
+                </table>
+                <button ng-click="irAProyectoEstudiantes()" ng-show="proyectoSeleccionado!==Null">
+                    <label>
+                        Ver detalles de Proyecto Seleccionado
+                    </label>
+                </button>
+                <div id="navigation">
+                    <button ng-click="irAProyectosOrganizacionEstudiantes()">
+                        Volver
+                    </button>
+                </div>
+            </div>
+            
+            <div ng-show="mostrarProyectoEstudiantes" align="center">
+                <label>
+                    Detalles Proyecto:
+                </label>
+                <br>
+                <label>
+                    Codigo: {{proyectoDeInteres.codigo}}
+                </label>
+                <br>
+                <label>
+                    Nombre: {{proyectoDeInteres.nombre}}
+                </label>
+                <br>
+                <label>
+                    Fecha de Inicio: {{proyectoDeInteres.fechaInicio | date:'yyyy-MM-dd HH:mm:ss Z'}}
+                </label>
+                <br>
+                <label>
+                    Fecha de Fin: {{proyectoDeInteres.fechaFin | date:'yyyy-MM-dd HH:mm:ss Z'}}
+                </label>
+                <br>
+                <label>
+                    Tema: {{proyectoDeInteres.tema}}
+                </label>
+                <br>
+                <label>
+                    Objetivo: {{proyectoDeInteres.objetivo}}
+                </label>
+                <br>
+                <div id="navigation">
+                    <button ng-click="irAProyectosEstudiantes()">
+                        Volver
+                    </button>
+                </div>
+            </div>
+            
+            <div ng-show="mostrarOpinionesEstudiante" align="center">
+                <table border="4">
+                    <label>
+                        Opiniones
+                    </label>
+                    <tr>
+                        <th>Identificador de Opinión</th>
+                        <th>Titulo de Opinión</th>
+                        <th>Cuerpo de Opinión</th>
+                        <th>Autor de Opinión</th>
+                        <th>Beca de Opinión</th>
+                    </tr>
+                    <tr ng-repeat = "opinion in opiniones | orderBy: 'id'">
+                        <td>{{ opinion.id }}</td>
+                        <td>{{ opinion.titulo }}</td>
+                        <td>{{ opinion.opinion }}</td>
+                        <td>{{ opinion.quienOpina.nombre }}</td>
+                        <td>{{ opinion.sobreBeca.nombre }}</td>
+                    </tr>
+                </table>
+                <button>
+                    <label>
+                        Registrar Una Opinión
+                    </label>
+                </button>
+                <div id="navigation">
+                    <button ng-click="irAServiciosEstudiante()">
+                        Volver
+                    </button>
+                </div>                               
+            </div>
+                
+            
+            <div ng-show="mostrarServiciosOrganizacion" align="center">
+                <label>Indique su ID de Organizacón a Consultar: </label>
+                <input type="number" name="org" ng-model="org" ng-change="idOrgValido = false"/>
+                <br>
+                <button ng-hide="idOrgValido" ng-click="validarIdOrg()">
+                    <label>
+                        Validar ID Organización
+                    </label>
+                </button>
+                <br>
+                <button ng-show="idOrgValido" ng-click="irARegistrarProyectoOrganizacion()">
+                    <label>
+                        Registrar un Nuevo Proyecto
+                    </label>
+                </button>
+                <br>
+                <button ng-show="idOrgValido" ng-click="irAProyectosOrganizacion()">
+                    <label>
+                        Ver Proyectos de esta Organización
+                    </label>
+                </button>
+                <br>
+                <div id="navigation">
+                    <button ng-click="irASeleccionUsuario()">
+                        Volver
+                    </button>
+                </div>                               
+            </div>
+            
+            <div ng-show="mostrarProyectosOrganizacion" align="center">
+                <table border="4">
+                    <label>
+                        Proyectos de Organización (Seleccione para más Detalles)
+                    </label>
+                    <tr>
+                        <th>Identificador de Proyecto</th>
+                        <th>Nombre de Proyecto</th>
+                    </tr>
+                    <tr ng-repeat = "proyecto in proyectosDeOrganizacion | orderBy: 'codigo'" ng-click="setProyectoSeleccionado(proyecto.codigo)" ng-class="{selected: proyecto.codigo === proyectoSeleccionado}">
+                        <td>{{ proyecto.codigo }}</td>
+                        <td>{{ proyecto.nombre }}</td>
+                    </tr>
+                </table>
+                <button ng-click="irAProyectoOrganizacion()" ng-show="proyectoSeleccionado!==Null">
+                    <label>
+                        Ver detalles de Proyecto Seleccionado
+                    </label>
+                </button>
+                <div id="navigation">
+                    <button ng-click="irAServiciosOrganizacion()">
+                        Volver
+                    </button>
+                </div>                               
+            </div>
+            
+            <div ng-show="mostrarProyectoOrganizacion" align="center">
+                <label>
+                    Detalles Proyecto:
+                </label>
+                <br>
+                <label>
+                    Codigo: {{proyectoDeInteres.codigo}}
+                </label>
+                <br>
+                <label>
+                    Nombre: {{proyectoDeInteres.nombre}}
+                </label>
+                <br>
+                <label>
+                    Fecha de Inicio: {{proyectoDeInteres.fechaInicio | date:'yyyy-MM-dd HH:mm:ss Z'}}
+                </label>
+                <br>
+                <label>
+                    Fecha de Fin: {{proyectoDeInteres.fechaFin | date:'yyyy-MM-dd HH:mm:ss Z'}}
+                </label>
+                <br>
+                <label>
+                    Tema: {{proyectoDeInteres.tema}}
+                </label>
+                <br>
+                <label>
+                    Objetivo: {{proyectoDeInteres.objetivo}}
+                </label>
+                <br>
+                <div id="navigation">
+                    <button ng-click="irAProyectosOrganizacion()()">
+                        Volver
+                    </button>
+                </div>
+            </div>
+            
+            <div ng-show="mostrarRegistrarProyectoOrganizacion" align="center">
+                <label>
+                    Detalles Proyecto:
+                </label>
+                <br>
+                <label>
+                    Codigo: 
+                </label>
+                <input type="number" ng-model="idProyecto"/>
+                <br>
+                <label>
+                    Nombre: 
+                </label>
+                <input type="text" ng-model="nombreProyecto"/>
+                <br>
+                <label>
+                    Fecha de Inicio: 
+                </label>
+                <input type="date" ng-model="fechaInicioProyecto"/>
+                <br>
+                <label>
+                    Fecha de Fin: 
+                </label>
+                <input type="date" ng-model="fechaFinProyecto"/>
+                <br>
+                <label>
+                    Tema: 
+                </label>
+                <input type="text" ng-model="temaProyecto"/>
+                <br>
+                <label>
+                    Objetivo: 
+                </label>
+                <input type="text" ng-model="objetivoProyecto"/>
+                <br>
+                <button ng-click="datosProyectoValidos()" ng-hide="datosValidos">
+                        Validar Datos
+                </button>
+                <br>
+                <button ng-show="datosValidos">
+                    Registrar Proyecto
+                </button>
+                <br>
+                <div id="navigation">
+                    <button ng-click="irAProyectoOrganizacion()">
+                        Volver
+                    </button>
+                </div>
+            </div>
         </div>
     </body>
 </html>

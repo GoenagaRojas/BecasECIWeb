@@ -6582,3 +6582,6 @@ button.close {
   }
 }
 /*# sourceMappingURL=bootstrap.css.map */
+.selected {
+  background-color: #ce8483;
+}

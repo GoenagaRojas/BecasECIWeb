@@ -17,8 +17,6 @@ public class OtorgacionBeca {
     private Integer id;
     private Date fecha;
     private Boolean estado;
-    private Beca aBeca;
-    private ArrayList<Estudiante> quienEsBecado=new ArrayList<>();
 
     public OtorgacionBeca(Integer id) {
         this.id = id;
@@ -46,22 +44,6 @@ public class OtorgacionBeca {
 
     public void setEstado(Boolean estado) {
         this.estado = estado;
-    }
-
-    public Beca getaBeca() {
-        return aBeca;
-    }
-
-    public void setaBeca(Beca aBeca) {
-        this.aBeca = aBeca;
-    }
-
-    public ArrayList<Estudiante> getQuienEsBecado() {
-        return quienEsBecado;
-    }
-
-    public void setQuienEsBecado(ArrayList<Estudiante> quienEsBecado) {
-        this.quienEsBecado = quienEsBecado;
     }
     
     

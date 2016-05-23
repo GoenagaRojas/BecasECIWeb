@@ -16,9 +16,25 @@ public class Postulacion {
     private Integer id;
     private Date fechaPostulacion;
     private Boolean estado;
-    private Estudiante estudianteQueRealiza;
     private Beca aBeca;
+    private Estudiante postulado;
 
+    public Beca getaBeca() {
+        return aBeca;
+    }
+
+    public void setaBeca(Beca aBeca) {
+        this.aBeca = aBeca;
+    }
+
+    public Estudiante getPostulado() {
+        return postulado;
+    }
+
+    public void setPostulado(Estudiante postulado) {
+        this.postulado = postulado;
+    }
+    
     public Postulacion(Integer id) {
         this.id = id;
     }
@@ -46,24 +62,4 @@ public class Postulacion {
     public void setEstado(Boolean estado) {
         this.estado = estado;
     }
-
-    public Estudiante getEstudianteQueRealiza() {
-        return estudianteQueRealiza;
-    }
-
-    public void setEstudianteQueRealiza(Estudiante estudianteQueRealiza) {
-        this.estudianteQueRealiza = estudianteQueRealiza;
-    }
-
-    public Beca getaBeca() {
-        return aBeca;
-    }
-
-    public void setaBeca(Beca aBeca) {
-        this.aBeca = aBeca;
-    }
-    
-    
-    
-    
 }

@@ -30,9 +30,26 @@ public class ServicesFacade {
         for (int i = 0; i < 20; i++) {
             BECAS.add(new Beca(i));
             BECAS.get(i).setNombre("Beca "+i);
+            Beca bactual=BECAS.get(i);
+            bactual.setDuracionSemestres(10);
+            for (int j = 0; j < 10; j++) {
+                bactual.getBeneficios().add("Beneficio "+j);
+                bactual.getOpciones().add("Opción "+j);
+                bactual.getCondiciones().add("Condición "+j);
+            }
             ESTUDIANTES.add(new Estudiante(i, 210+i, "Nombre"+i, "Apellido"+i, 4));
-            OPINIONES.add(new Opinion(i));
-            PROYECTOS.add(new Proyecto(i, "Proyecto"+i));
+            Opinion op = new Opinion(i);
+            op.setTitulo("Titulo Opinion "+i);
+            op.setOpinion("Cuerpo Opinion "+i);
+            op.setAutor(ESTUDIANTES.get(i));
+            op.setBeca(BECAS.get(i));
+            OPINIONES.add(op);
+            Proyecto p=new Proyecto(i+1, "Proyecto"+i);
+            p.setObjetivo("Objetivo Proyecto "+i);
+            p.setTema("Tema Proyecto "+i);
+            p.setFechaInicio(new Date());
+            p.setFechaFin(new Date());
+            PROYECTOS.add(p);
             if(i%2==0){
                 ORGANIZACIONES.add(new Organizacion(i, "Organizacion"+i, "Privada", "www.logo"+i+".com", "Slogan Org"+i));
                 PROGRAMASACADEMICOS.add(new ProgramaAcademico(i, "Carrera"+i, 7400000, 10, 180, "Pregrado"));
@@ -40,19 +57,23 @@ public class ServicesFacade {
                 OtorgacionBeca actual=OTORGACIONESBECAS.get(OTORGACIONESBECAS.size()-1);
                 actual.setEstado(Boolean.TRUE);
                 actual.setFecha(new Date());
-                actual.setQuienEsBecado(ESTUDIANTES);
-                actual.setaBeca(BECAS.get(i));
+                ESTUDIANTES.get(i).setBecadoA(actual);
+                BECAS.get(i).getOtorgadaA().add(actual);
             }else{
                 ORGANIZACIONES.add(new Organizacion(i, "Organizacion"+i, "Publica", "www.logo"+i+".com", "Slogan Org"+i));
                 PROGRAMASACADEMICOS.add(new ProgramaAcademico(i, "Carrera"+i, 7400000, 10, 180, "Posgrado"));
                 POSTULACIONES.add(new Postulacion(i));
                 Postulacion actual=POSTULACIONES.get(POSTULACIONES.size()-1);
                 actual.setEstado(Boolean.FALSE);
-                actual.setEstudianteQueRealiza(ESTUDIANTES.get(i));
                 actual.setFechaPostulacion(new Date());
+                actual.setPostulado(ESTUDIANTES.get(i));
                 actual.setaBeca(BECAS.get(i));
-                PROYECTOS.get(PROYECTOS.size()-1).getOrgsPatrocinan().add(ORGANIZACIONES.get(ORGANIZACIONES.size()-1));
+                for (int pro=0; pro<PROYECTOS.size();pro++) {
+                    ORGANIZACIONES.get(i).getProyectoPatrocina().add(p);
+                }
             }
+            ORGANIZACIONES.get(i).setDirSedePpal("Carrera "+i+" # "+(i+1));
+            ESTUDIANTES.get(i).setCarrera(PROGRAMASACADEMICOS.get(i));
         }
     }
     
@@ -95,12 +116,20 @@ public class ServicesFacade {
     
     public List<Proyecto> getProyectosOrganizacion(String idOrganizacion){
         List<Proyecto> ans=new ArrayList<>();
-        for (Proyecto proyecto : PROYECTOS) {
-            ArrayList<Organizacion> orgs=proyecto.getOrgsPatrocinan();
-            for (Organizacion org : orgs) {
-                if(Objects.equals(org.getId(), Integer.parseInt(idOrganizacion))){
-                    ans.add(proyecto);
-                }
+        for (Organizacion org : ORGANIZACIONES) {
+            if(org.getId()==Integer.parseInt(idOrganizacion)){
+                ans=org.getProyectoPatrocina();
+                break;
+            }
+        }
+        return ans;
+    }
+    
+    public List<Opinion> getOpinionesBeca(String idBeca){
+        List<Opinion> ans = new ArrayList<>();
+        for (Opinion op : OPINIONES) {
+            if(op.getBeca().getId()==Integer.parseInt(idBeca)){
+                ans.add(op);
             }
         }
         return ans;
@@ -111,14 +140,119 @@ public class ServicesFacade {
     }
     
     public void addProyecto(Proyecto proyecto){
-        PROYECTOS.add(proyecto);
+        Boolean found=false;
+        if(proyecto.getCodigo()==null){
+            proyecto.setCodigo(PROYECTOS.size());
+            PROYECTOS.add(proyecto);
+            found=true;
+        }
+        for (int i = 0; i < PROYECTOS.size()&&!found; i++) {
+            if(Objects.equals(PROYECTOS.get(i).getCodigo(), proyecto.getCodigo())){
+                PROYECTOS.add(i, proyecto);
+                found=true;
+            }
+        }
     }
     
     public void addBeca(Beca beca){
-        BECAS.add(beca);
+        Boolean found=false;
+        if(beca.getId()==null){
+            beca.setId(BECAS.size());
+            BECAS.add(beca);
+            found=true;
+        }
+        for (int i = 0; i < BECAS.size()&&!found; i++) {
+            if(Objects.equals(BECAS.get(i).getId(), beca.getId())){
+                BECAS.add(i, beca);
+                found=true;
+            }
+        }
     }
     
     public void addOpinion(Opinion opinion){
-        OPINIONES.add(opinion);
+        Boolean found=false;
+        if(opinion.getId()==null){
+            opinion.setId(OPINIONES.size());
+            OPINIONES.add(opinion);
+            found=true;
+        }
+        for (int i = 0; i < OPINIONES.size()&&!found; i++) {
+            if(Objects.equals(OPINIONES.get(i).getId(), opinion.getId())){
+                OPINIONES.add(i, opinion);
+                found=true;
+            }
+        }
+    }
+    
+    public Boolean idEstudianteValido(String id){
+        Boolean ans=false;
+        for (Estudiante es : ESTUDIANTES) {
+            if(es.getId()==Integer.parseInt(id)){
+                ans=true;
+            }
+        }
+        return ans;
+    }
+    
+    public Boolean idOrganizacionValido(String id){
+        Boolean ans=false;
+        for (Organizacion org : ORGANIZACIONES) {
+            if(org.getId()==Integer.parseInt(id)){
+                ans=true;
+            }
+        }
+        return ans;
+    }
+    
+    public void estudianteAplica(Postulacion p){
+        Boolean found=false;
+        if(p.getId()==null){
+            p.setId(POSTULACIONES.size());
+            POSTULACIONES.add(p);
+            found=true;
+        }
+        for (int i = 0; i < POSTULACIONES.size() && !found; i++) {
+            if(Objects.equals(POSTULACIONES.get(i).getId(), p.getId())){
+                POSTULACIONES.add(i, p);
+                found=true;
+            }
+        }
+    }
+    
+    public List<Proyecto> proyectosEstudiante(String idEst){
+        List<Proyecto> ans=new ArrayList<>();
+        for (Proyecto p : PROYECTOS) {
+            for (Estudiante es : p.getParticipan()) {
+                if(Objects.equals(es.getCodigo(), Integer.parseInt(idEst))){
+                    ans.add(p);
+                }
+            }
+        }
+        return ans;
+    }
+    
+    public List<Postulacion> postulacionesEstudiante(String idEst){
+        List<Postulacion> ans= new ArrayList<>();
+        for (Postulacion p : POSTULACIONES) {
+            if(Objects.equals(p.getPostulado().getId(), Integer.parseInt(idEst))){
+                ans.add(p);
+            }
+        }
+        return ans;
+    }
+    
+    public Estudiante getEstudiante(String id){
+        Estudiante ans= null;
+        for (Estudiante es : ESTUDIANTES) {
+            if(es.getId()==Integer.parseInt(id)){
+                ans=es;
+                break;
+            }
+        }
+        return ans;
+    }
+    
+    public List<Postulacion> getPostulaciones(){
+        return POSTULACIONES;
     }
 }

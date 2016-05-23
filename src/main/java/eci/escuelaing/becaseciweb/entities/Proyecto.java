@@ -21,7 +21,6 @@ public class Proyecto {
     private String tema;
     private ArrayList<String> areaDeConocimiento=new ArrayList<>();
     private String objetivo;
-    private ArrayList<Organizacion> orgsPatrocinan=new ArrayList<>();
     private ArrayList<Estudiante> participan=new ArrayList<>();
 
     public Proyecto(Integer codigo, String nombre) {
@@ -83,14 +82,6 @@ public class Proyecto {
 
     public void setObjetivo(String objetivo) {
         this.objetivo = objetivo;
-    }
-
-    public ArrayList<Organizacion> getOrgsPatrocinan() {
-        return orgsPatrocinan;
-    }
-
-    public void setOrgsPatrocinan(ArrayList<Organizacion> orgsPatrocinan) {
-        this.orgsPatrocinan = orgsPatrocinan;
     }
 
     public ArrayList<Estudiante> getParticipan() {

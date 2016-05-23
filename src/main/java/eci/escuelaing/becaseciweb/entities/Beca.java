@@ -15,13 +15,11 @@ public class Beca {
     
     private Integer id;
     private String nombre;
-    private ArrayList<Postulacion> postulaciones=new ArrayList<>();
     private Integer duracionSemestres;
     private ArrayList<ProgramaAcademico> otorgadaPara= new ArrayList<>();
     private ArrayList<String> beneficios= new ArrayList<>();
     private ArrayList<String> opciones= new ArrayList<>();
     private ArrayList<String> condiciones =new ArrayList<>();
-    private ArrayList<Opinion> opiniones =new ArrayList<>();
     private ArrayList<OtorgacionBeca> otorgadaA=new ArrayList<>();
 
     public Beca(Integer id) {
@@ -42,16 +40,6 @@ public class Beca {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-    
-    
-    
-    public ArrayList<Postulacion> getPostulaciones() {
-        return postulaciones;
-    }
-
-    public void setPostulaciones(ArrayList<Postulacion> postulaciones) {
-        this.postulaciones = postulaciones;
     }
 
     public Integer getDuracionSemestres() {
@@ -92,14 +80,6 @@ public class Beca {
 
     public void setCondiciones(ArrayList<String> condiciones) {
         this.condiciones = condiciones;
-    }
-
-    public ArrayList<Opinion> getOpiniones() {
-        return opiniones;
-    }
-
-    public void setOpiniones(ArrayList<Opinion> opiniones) {
-        this.opiniones = opiniones;
     }
 
     public ArrayList<OtorgacionBeca> getOtorgadaA() {
