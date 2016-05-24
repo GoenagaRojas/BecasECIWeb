@@ -155,6 +155,15 @@ app.controller('AppController', ['$scope','$http' , function($scope,$http) {
         $scope.mostrarProyectoOrganizacion= false;
         $scope.mostrarProyectoEstudiantes= false;
         $scope.mostrarRegistrarProyectoOrganizacion= false;
+        $http.get('rest/becasECI').
+        success(function (data, status, headers, config) {
+            $scope.becasCoor=data;
+        }).
+        error(function (data, status, headers, config) {
+        });
+        $scope.setBecaSeleccionadaCoor = function(idBeca){
+            $scope.becaSeleccionadaCoor=idBeca;
+        };
     };
     $scope.irARegistrarBecaCoordinador= function(){
         $scope.mostrarSeleccionUsuario = false;
@@ -174,6 +183,31 @@ app.controller('AppController', ['$scope','$http' , function($scope,$http) {
         $scope.mostrarProyectoOrganizacion= false;
         $scope.mostrarProyectoEstudiantes= false;
         $scope.mostrarRegistrarProyectoOrganizacion= false;
+        $scope.estadoRegistroBeca='Incompleto';
+        $scope.nombreBeca=null;
+        $scope.duracionSemestres=null;
+        $scope.registrarBeca=function (){
+            $scope.nuevaBeca={
+                id: null,
+                nombre: $scope.nombreBeca,
+                duracionSemestres: $scope.duracionSemestres,
+                otorgadaPara: [],
+                beneficios: [],
+                opciones: [],
+                condiciones: [],
+                otorgadaA: []
+            };
+            $scope.nuevaBeca=JSON.stringify($scope.nuevaBeca);
+            $http.post('rest/becasECI?beca='+$scope.nuevaBeca)
+            .success(function (data, status, headers, config) {
+                $scope.estadoRegistroBeca='Completo';
+            })
+            .error(function (data, status, header, config) {
+            });
+        };
+        $scope.datosBecaValidos=function (){
+            return $scope.nombreBeca!==null && $scope.duracionSemestres!==null && $scope.duracionSemestres>0 && $scope.duracionSemestres<11;
+        };
     };
     $scope.irABecaEstudiante= function(){
         $scope.mostrarSeleccionUsuario = false;
@@ -246,6 +280,24 @@ app.controller('AppController', ['$scope','$http' , function($scope,$http) {
         $scope.mostrarProyectoOrganizacion= false;
         $scope.mostrarProyectoEstudiantes= false;
         $scope.mostrarRegistrarProyectoOrganizacion= false;
+        $http.get('rest/becasECI/'+$scope.becaSeleccionadaCoor).
+        success(function (data, status, headers, config) {
+            $scope.becaDeInteresCoor=data;
+        }).
+        error(function (data, status, headers, config) {
+        });
+        $http.get('rest/becasECI/opinion?idBeca='+$scope.becaSeleccionadaCoor).
+        success(function (data, status, headers, config) {
+            $scope.opinionesDeBecaCoor=data;
+        }).
+        error(function (data, status, headers, config) {
+        });
+        $http.get('rest/becasECI/postulacion?idBeca='+$scope.becaSeleccionadaCoor).
+        success(function (data, status, headers, config) {
+            $scope.postulacionesDeBecaCoor=data;
+        }).
+        error(function (data, status, headers, config) {
+        });
     };
     $scope.irAOpinionesEstudiante= function(){
         $scope.mostrarSeleccionUsuario = false;
@@ -399,7 +451,6 @@ app.controller('AppController', ['$scope','$http' , function($scope,$http) {
         $http.get('rest/becasECI/proyecto/'+$scope.proyectoSeleccionadoOrg).
         success(function (data, status, headers, config) {
             $scope.proyectoDeInteres=data;
-            console.info($scope.proyectoDeInteres);
         }).
         error(function (data, status, headers, config) {
         });
@@ -428,6 +479,29 @@ app.controller('AppController', ['$scope','$http' , function($scope,$http) {
         }).
         error(function (data, status, headers, config) {
         });
+        $scope.validarIdPar= function (){
+            if($scope.est!==null){
+                $http.get('rest/becasECI/estudiante/'+$scope.est).
+                success(function (data, status, headers, config) {
+                    $scope.idValido=data;
+                }).
+                error(function (data, status, headers, config) {
+                });
+            }
+        };
+        $scope.guardarPostulacionProyecto= function (){
+            $http.post('http://localhost:8084/BecasECIWeb/rest/becasECI/aplicacion?idEst='+$scope.est+'&idProyecto='+$scope.proyectoSeleccionado)
+            .success(function (data, status, headers, config) {
+                $http.get('rest/becasECI/proyecto/'+$scope.proyectoSeleccionado).
+                success(function (data, status, headers, config) {
+                    $scope.proyectoDeInteres=data;
+                }).
+                error(function (data, status, headers, config) {
+                });
+            })
+            .error(function (data, status, header, config) {
+            });
+        };
     };
     $scope.irARegistrarProyectoOrganizacion= function(){
         $scope.mostrarSeleccionUsuario = false;
@@ -454,6 +528,7 @@ app.controller('AppController', ['$scope','$http' , function($scope,$http) {
         $scope.temaProyecto = null;
         $scope.objetivoProyecto = null;
         $scope.datosValidos=false;
+        $scope.estadoRegistro='Incompleto';
         $scope.datosProyectoValidos = function (){
             $scope.datosValidos=true;
             $scope.datosValidos=$scope.datosValidos && $scope.nombreProyecto !== null;
@@ -475,9 +550,16 @@ app.controller('AppController', ['$scope','$http' , function($scope,$http) {
             }
         };
         $scope.guardarProyecto = function(){
-            console.info($scope.nuevoProyecto);
-            $http.post('rest/becasECI/proyecto?newP='+$scope.nuevoProyecto)
+            $http.post('rest/becasECI/proyecto?newP='+$scope.nuevoProyecto+'&idOrg='+$scope.org)
             .success(function (data, status, headers, config) {
+                $scope.estadoRegistro='Completo';
+                $scope.idProyecto = null;
+                $scope.nombreProyecto = null;
+                $scope.fechaInicioProyecto = null;
+                $scope.fechaFinProyecto = null;
+                $scope.temaProyecto = null;
+                $scope.objetivoProyecto = null;
+                $scope.datosValidos=false;
             })
             .error(function (data, status, header, config) {
             });

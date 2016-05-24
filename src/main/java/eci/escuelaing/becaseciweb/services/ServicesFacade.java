@@ -44,7 +44,7 @@ public class ServicesFacade {
             op.setAutor(ESTUDIANTES.get(i));
             op.setBeca(BECAS.get(i));
             OPINIONES.add(op);
-            Proyecto p=new Proyecto(i+1, "Proyecto"+i);
+            Proyecto p=new Proyecto(i, "Proyecto"+i);
             p.setObjetivo("Objetivo Proyecto "+i);
             p.setTema("Tema Proyecto "+i);
             p.setFechaInicio(new Date());
@@ -135,11 +135,21 @@ public class ServicesFacade {
         return ans;
     }
     
+    public List<Postulacion> getPostulacionesBeca(String idBeca){
+        List<Postulacion> ans = new ArrayList<>();
+        for (Postulacion po : POSTULACIONES) {
+            if(po.getaBeca().getId()==Integer.parseInt(idBeca)){
+                ans.add(po);
+            }
+        }
+        return ans;
+    }
+    
     public List<Organizacion> getOrganizaciones(){
         return ORGANIZACIONES;
     }
     
-    public void addProyecto(Proyecto proyecto){
+    public void addProyecto(Proyecto proyecto, String idOrg){
         Boolean found=false;
         if(proyecto.getCodigo()==null){
             proyecto.setCodigo(PROYECTOS.size());
@@ -150,6 +160,14 @@ public class ServicesFacade {
             if(Objects.equals(PROYECTOS.get(i).getCodigo(), proyecto.getCodigo())){
                 PROYECTOS.add(i, proyecto);
                 found=true;
+            }
+        }
+        if(found){
+            for (Organizacion org : ORGANIZACIONES) {
+                if(org.getId()==Integer.parseInt(idOrg)){
+                    org.getProyectoPatrocina().add(proyecto);
+                    break;
+                }
             }
         }
     }
@@ -204,7 +222,7 @@ public class ServicesFacade {
         return ans;
     }
     
-    public void estudianteAplica(String idEst, String idBeca){
+    public void estudianteAplicaBeca(String idEst, String idBeca){
         Boolean found=false;
         for (Postulacion p : POSTULACIONES) {
             if((p.getPostulado().getId()==Integer.parseInt(idEst))&&(p.getaBeca().getId()==Integer.parseInt(idBeca))){
@@ -219,6 +237,20 @@ public class ServicesFacade {
             nueva.setPostulado(getEstudiante(idEst));
             nueva.setaBeca(getBeca(idBeca));
             POSTULACIONES.add(nueva);
+        }
+    }
+    
+    public void estudianteAplicaProyecto(String idEst, String idProyecto){
+        for (Estudiante es : ESTUDIANTES) {
+            if(es.getId()==Integer.parseInt(idEst)){
+                for (Proyecto pro : PROYECTOS) {
+                    if(pro.getCodigo()==Integer.parseInt(idProyecto)){
+                        pro.getParticipan().add(es);
+                        break;
+                    }
+                }
+                break;
+            }
         }
     }
     

@@ -71,22 +71,29 @@ public class BecasECIController {
         return new HashSet<>(services.getProyectosOrganizacion(id));
     }
     
+    @RequestMapping(value = "/postulacion", method = RequestMethod.GET)
+    public @ResponseBody Set<Postulacion> getPostulacionesBeca(@RequestParam(value="idBeca", required=true) String id){
+        return new HashSet<>(services.getPostulacionesBeca(id));
+    }
+    
     @RequestMapping(value = "/opinion", method = RequestMethod.GET)
     public @ResponseBody Set<Opinion> getOpinionesBeca(@RequestParam(value="idBeca", required=true) String id){
         return new HashSet<>(services.getOpinionesBeca(id));
     }
     
     @RequestMapping(value = "/proyecto",method = RequestMethod.POST)
-    public ResponseEntity<?> postProyecto(@RequestParam(value = "newP", required = true) String newP){
+    public ResponseEntity<?> postProyecto(@RequestParam(value = "newP", required = true) String newP, @RequestParam(value = "idOrg", required = true) String idOrg){
         Gson gson = new Gson();
         Proyecto nuevo= gson.fromJson(newP, Proyecto.class);
-        services.addProyecto(nuevo);
+        services.addProyecto(nuevo, idOrg);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
     
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<?> postBeca(@RequestBody Beca b){
-        services.addBeca(b);
+    public ResponseEntity<?> postBeca(@RequestParam(value = "beca", required = true) String b){
+        Gson gson = new Gson();
+        Beca beca = gson.fromJson(b, Beca.class);
+        services.addBeca(beca);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
     
@@ -124,8 +131,14 @@ public class BecasECIController {
     }
     
     @RequestMapping(value = "/postulacion",method = RequestMethod.POST)
-    public ResponseEntity<?> postPostulacion(@RequestParam(value = "idEst", required = true) String idEst, @RequestParam(value = "idBeca", required = true) String idBeca){
-        services.estudianteAplica(idEst, idBeca);
+    public ResponseEntity<?> postPostulacionBeca(@RequestParam(value = "idEst", required = true) String idEst, @RequestParam(value = "idBeca", required = true) String idBeca){
+        services.estudianteAplicaBeca(idEst, idBeca);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+    
+    @RequestMapping(value = "/aplicacion",method = RequestMethod.POST)
+    public ResponseEntity<?> postPostulacionProyecto(@RequestParam(value = "idEst", required = true) String idEst, @RequestParam(value = "idProyecto", required = true) String idProyecto){
+        services.estudianteAplicaProyecto(idEst, idProyecto);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
     
