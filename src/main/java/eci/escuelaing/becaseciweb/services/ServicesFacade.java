@@ -187,19 +187,23 @@ public class ServicesFacade {
         }
     }
     
-    public void addOpinion(Opinion opinion){
-        Boolean found=false;
-        if(opinion.getId()==null){
-            opinion.setId(OPINIONES.size());
-            OPINIONES.add(opinion);
-            found=true;
-        }
-        for (int i = 0; i < OPINIONES.size()&&!found; i++) {
-            if(Objects.equals(OPINIONES.get(i).getId(), opinion.getId())){
-                OPINIONES.add(i, opinion);
-                found=true;
+    public void addOpinion(String titulo, String cuerpo, String idEst, String idBeca){
+        Opinion nueva=new Opinion(OPINIONES.size());
+        nueva.setTitulo(titulo);
+        nueva.setOpinion(cuerpo);
+        for (Estudiante es : ESTUDIANTES) {
+            if(es.getId()==Integer.parseInt(idEst)){
+                nueva.setAutor(es);
+                break;
             }
         }
+        for (Beca beca : BECAS) {
+            if(beca.getId()==Integer.parseInt(idBeca)){
+                nueva.setBeca(beca);
+                break;
+            }
+        }
+        OPINIONES.add(nueva);
     }
     
     public Boolean idEstudianteValido(String id){
@@ -289,5 +293,32 @@ public class ServicesFacade {
     
     public List<Postulacion> getPostulaciones(){
         return POSTULACIONES;
+    }
+    
+    public void addBeneficioBeca(String idBeca, String beneficio){
+        for (Beca beca : BECAS) {
+            if(beca.getId()==Integer.parseInt(idBeca)){
+                beca.getBeneficios().add(beneficio);
+                break;
+            }
+        }
+    }
+    
+    public void addCondicionBeca(String idBeca, String condicion){
+        for (Beca beca : BECAS) {
+            if(beca.getId()==Integer.parseInt(idBeca)){
+                beca.getCondiciones().add(condicion);
+                break;
+            }
+        }
+    }
+    
+    public void addOpcionBeca(String idBeca, String opcion){
+        for (Beca beca : BECAS) {
+            if(beca.getId()==Integer.parseInt(idBeca)){
+                beca.getOpciones().add(opcion);
+                break;
+            }
+        }
     }
 }

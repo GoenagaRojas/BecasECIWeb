@@ -17,6 +17,7 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -98,8 +99,8 @@ public class BecasECIController {
     }
     
     @RequestMapping(value = "/opinion",method = RequestMethod.POST)
-    public ResponseEntity<?> postOpinion(@RequestBody Opinion o){
-        services.addOpinion(o);
+    public ResponseEntity<?> postOpinion(@RequestParam(value = "titulo", required = true) String titulo, @RequestParam(value = "cuerpo", required = true) String cuerpo, @RequestParam(value = "idEst", required = true) String idEst, @RequestParam(value = "idBeca", required = true) String idBeca){
+        services.addOpinion(titulo, cuerpo, idEst, idBeca);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
     
@@ -111,8 +112,7 @@ public class BecasECIController {
     @RequestMapping(value = "organizacion/{id}", method = RequestMethod.GET)
     public Boolean idOrgValido(@PathVariable("id") String id){
         return services.idOrganizacionValido(id);
-    }
-    
+    } 
     
     @RequestMapping(value = "estudiante/proyecto", method = RequestMethod.GET)
     public @ResponseBody Set<Proyecto> getProyectosEstudiante(@RequestParam(value="idEst", required=true) String id){
@@ -145,5 +145,23 @@ public class BecasECIController {
     @RequestMapping(value = "/estudiante", method = RequestMethod.GET)
     public @ResponseBody Estudiante getEstudiante(@RequestParam(value="idEst", required=true) String id){
         return services.getEstudiante(id);
+    }
+    
+    @RequestMapping(value = "/beneficio",method = RequestMethod.POST)
+    public ResponseEntity<?> postBeneficioBeca(@RequestParam(value = "idBeca", required = true) String idBeca, @RequestParam(value = "beneficio", required = true) String beneficio){
+        services.addBeneficioBeca(idBeca, beneficio);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+    
+    @RequestMapping(value = "/opcion",method = RequestMethod.POST)
+    public ResponseEntity<?> postOpcionBeca(@RequestParam(value = "idBeca", required = true) String idBeca, @RequestParam(value = "opcion", required = true) String opcion){
+        services.addOpcionBeca(idBeca, opcion);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+    
+    @RequestMapping(value = "/condicion",method = RequestMethod.POST)
+    public ResponseEntity<?> postCondicionBeca(@RequestParam(value = "idBeca", required = true) String idBeca, @RequestParam(value = "condicion", required = true) String condicion){
+        services.addCondicionBeca(idBeca, condicion);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

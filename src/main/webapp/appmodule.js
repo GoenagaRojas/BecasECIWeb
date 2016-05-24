@@ -298,6 +298,48 @@ app.controller('AppController', ['$scope','$http' , function($scope,$http) {
         }).
         error(function (data, status, headers, config) {
         });
+        $scope.condicion=null;
+        $scope.opcion=null;
+        $scope.beneficio=null;
+        $scope.registrarCondicion=function (){
+            $http.post('rest/becasECI/condicion?idBeca='+$scope.becaSeleccionadaCoor+'&condicion='+$scope.condicion)
+            .success(function (data, status, headers, config) {
+                $http.get('rest/becasECI/'+$scope.becaSeleccionadaCoor).
+                success(function (data, status, headers, config) {
+                    $scope.becaDeInteresCoor=data;
+                }).
+                error(function (data, status, headers, config) {
+                });
+            })
+            .error(function (data, status, header, config) {
+            });
+        };
+        $scope.registrarBeneficio=function (){
+            $http.post('rest/becasECI/beneficio?idBeca='+$scope.becaSeleccionadaCoor+'&beneficio='+$scope.beneficio)
+            .success(function (data, status, headers, config) {
+                $http.get('rest/becasECI/'+$scope.becaSeleccionadaCoor).
+                success(function (data, status, headers, config) {
+                    $scope.becaDeInteresCoor=data;
+                }).
+                error(function (data, status, headers, config) {
+                });
+            })
+            .error(function (data, status, header, config) {
+            });
+        };
+        $scope.registrarOpcion=function (){
+            $http.post('rest/becasECI/opcion?idBeca='+$scope.becaSeleccionadaCoor+'&opcion='+$scope.opcion)
+            .success(function (data, status, headers, config) {
+                $http.get('rest/becasECI/'+$scope.becaSeleccionadaCoor).
+                success(function (data, status, headers, config) {
+                    $scope.becaDeInteresCoor=data;
+                }).
+                error(function (data, status, headers, config) {
+                });
+            })
+            .error(function (data, status, header, config) {
+            });
+        };
     };
     $scope.irAOpinionesEstudiante= function(){
         $scope.mostrarSeleccionUsuario = false;
@@ -317,15 +359,15 @@ app.controller('AppController', ['$scope','$http' , function($scope,$http) {
         $scope.mostrarProyectoOrganizacion= false;
         $scope.mostrarProyectoEstudiantes= false;
         $scope.mostrarRegistrarProyectoOrganizacion= false;
-        $http.get('rest/becasECI/opiniones').
-        success(function (data, status, headers, config) {
-            $scope.opiniones=data;
-        }).
-        error(function (data, status, headers, config) {
-        });
-        $scope.setOpinionSeleccionada = function(idOpinion){
-            $scope.opinionSeleccionada=idOpinion;
+        $scope.refresh=function (){
+            $http.get('rest/becasECI/opiniones').
+            success(function (data, status, headers, config) {
+                $scope.opiniones=data;
+            }).
+            error(function (data, status, headers, config) {
+            });
         };
+        $scope.refresh();
     };
     $scope.irARegistrarOpinionEstudiante= function(){
         $scope.mostrarSeleccionUsuario = false;
@@ -345,6 +387,46 @@ app.controller('AppController', ['$scope','$http' , function($scope,$http) {
         $scope.mostrarProyectoOrganizacion= false;
         $scope.mostrarProyectoEstudiantes= false;
         $scope.mostrarRegistrarProyectoOrganizacion= false;
+        $scope.tituloOpinion=null;
+        $scope.cuerpoOpinion=null;
+        $scope.idEstOpinion=null;
+        $scope.idBecaOpinion=null;
+        $scope.datosOpinionValidos=false;
+        $scope.validarOpinion=function (){
+            $scope.datosOpinionValidos=true;
+            $scope.datosOpinionValidos=$scope.datosOpinionValidos&&$scope.tituloOpinion!==null;
+            $scope.datosOpinionValidos=$scope.datosOpinionValidos&&$scope.cuerpoOpinion!==null;
+            $scope.validarIdBeca();
+            $scope.validarIdEst();
+        };
+        $scope.guardarOpinion=function (){
+            if($scope.datosOpinionValidos){
+                $http.post('rest/becasECI/opinion?titulo='+$scope.tituloOpinion+'&cuerpo='+$scope.cuerpoOpinion+'&idEst='+$scope.idEstOpinion+'&idBeca='+$scope.idBecaOpinion)
+                .success(function (data, status, headers, config) {
+                    $scope.irAOpinionesEstudiante();
+                })
+                .error(function (data, status, header, config) {
+                });
+            }
+        };
+        $scope.validarIdBeca=function (){
+            $http.get('rest/becasECI/'+$scope.idBecaOpinion).
+            success(function (data, status, headers, config) {
+                $scope.datosOpinionValidos=$scope.datosOpinionValidos&&(data !==null);
+            }).
+            error(function (data, status, headers, config) {
+            });
+        };
+        $scope.validarIdEst= function (){
+            if($scope.est!==null){
+                $http.get('rest/becasECI/estudiante/'+$scope.idEstOpinion).
+                success(function (data, status, headers, config) {
+                    $scope.datosOpinionValidos=$scope.datosOpinionValidos&&data;
+                }).
+                error(function (data, status, headers, config) {
+                });
+            }
+        };
     };
     $scope.irAProyectosEstudiantes= function(){
         $scope.mostrarSeleccionUsuario = false;

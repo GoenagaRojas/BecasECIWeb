@@ -313,11 +313,11 @@
                         <td>{{ opinion.id }}</td>
                         <td>{{ opinion.titulo }}</td>
                         <td>{{ opinion.opinion }}</td>
-                        <td>{{ opinion.quienOpina.nombre }}</td>
-                        <td>{{ opinion.sobreBeca.nombre }}</td>
+                        <td>{{ opinion.autor.nombre }}</td>
+                        <td>{{ opinion.beca.nombre }}</td>
                     </tr>
                 </table>
-                <button>
+                <button ng-click="irARegistrarOpinionEstudiante()">
                     <label>
                         Registrar Una Opinión
                     </label>
@@ -550,7 +550,7 @@
                     <tr>
                         <th>Beneficios</th>
                     </tr>
-                    <tr ng-repeat = "beneficio in becaDeInteresCoor.beneficios">
+                    <tr ng-repeat = "beneficio in becaDeInteresCoor.beneficios track by $index">
                         <td>{{ beneficio }}</td>
                     </tr>
                 </table>
@@ -559,7 +559,7 @@
                     <tr>
                         <th>Opciones</th>
                     </tr>
-                    <tr ng-repeat = "opcion in becaDeInteresCoor.opciones">
+                    <tr ng-repeat = "opcion in becaDeInteresCoor.opciones track by $index">
                         <td>{{ opcion }}</td>
                     </tr>
                 </table>
@@ -568,7 +568,7 @@
                     <tr>
                         <th>Condiciones</th>
                     </tr>
-                    <tr ng-repeat = "condicion in becaDeInteresCoor.condiciones">
+                    <tr ng-repeat = "condicion in becaDeInteresCoor.condiciones track by $index">
                         <td>{{ condicion }}</td>
                     </tr>
                 </table>
@@ -603,6 +603,37 @@
                         <td>{{ postulacion.postulado.apellido }} {{ opinion.autor.apellido }}</td>
                     </tr>
                 </table>
+                <br>
+                <label>
+                    Nuevo Beneficio: 
+                </label>
+                <input type="text" ng-model="beneficio"/>
+                <button ng-click="registrarBeneficio()" ng-hide="beneficio.valueOf()===Null||beneficio.valueOf()===''">
+                    <label>
+                        Adicionar Beneficio a Beca Actual
+                    </label>
+                </button>
+                <br>
+                <label>
+                    Nueva Opción: 
+                </label>
+                <input type="text" ng-model="opcion"/>
+                <button ng-click="registrarOpcion()" ng-hide="opcion.valueOf()===Null||opcion.valueOf()===''">
+                    <label>
+                        Adicionar Opción a Beca Actual
+                    </label>
+                </button>
+                <br>
+                <label>
+                    Nueva Condición: 
+                </label>
+                <input type="text" ng-model="condicion"/>
+                <button ng-click="registrarCondicion()" ng-hide="condicion.valueOf()===Null||condicion.valueOf()===''">
+                    <label>
+                        Adicionar Condición a Beca Actual
+                    </label>
+                </button>
+                <br>
                 <div id="navigation">
                     <button ng-click="irABecasDisponiblesCoordinador()">
                         Volver
@@ -634,6 +665,42 @@
                     </label>
                     <br>
                     <button ng-click="irABecasDisponiblesCoordinador()">
+                        Volver
+                    </button>
+                </div>
+            </div>
+            
+            <div ng-show="mostrarRegistrarOpinionEstudiante" align="center">
+                <br>
+                <label>
+                    Titulo de Opinión: 
+                </label>
+                <input type="text" ng-model="tituloOpinion" ng-change="datosOpinionValidos=false"/>
+                <br>
+                <label>
+                    Cuerpo de Opinión: 
+                </label>
+                <input type="text" ng-model="cuerpoOpinion" ng-change="datosOpinionValidos=false"/>
+                <br>
+                <label>
+                    ID Autor de Opinión: 
+                </label>
+                <input type="number" ng-model="idEstOpinion" ng-change="datosOpinionValidos=false"/>
+                <br>
+                <label>
+                    ID Beca de Opinión: 
+                </label>
+                <input type="number" ng-model="idBecaOpinion" ng-change="datosOpinionValidos=false"/>
+                <br>
+                <button ng-click="validarOpinion()" ng-hide="datosOpinionValidos">
+                    Validar Datos
+                </button>
+                <br>
+                <button ng-show="datosOpinionValidos" ng-click="guardarOpinion()">
+                    Registrar Opinion
+                </button>
+                <div id="navigation">
+                    <button ng-click="irAOpinionesEstudiante()">
                         Volver
                     </button>
                 </div>
